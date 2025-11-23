@@ -6,8 +6,8 @@
     />
     <user-content
       ref="contentRef"
-      @new-click="handleNewClick"
-      @edit-click="handleEditClick"
+      @new-click="handleNewBtnClick"
+      @edit-click="handleEditBtnClick"
     />
     <user-modal ref="modalRef" />
   </div>
@@ -18,7 +18,6 @@ import { ref } from 'vue'
 import UserSearch from './c-cpns/user-search.vue'
 import UserContent from './c-cpns/user-content.vue'
 import UserModal from './c-cpns/user-modal.vue'
-
 // 对content组件的操作
 const contentRef = ref<InstanceType<typeof UserContent>>()
 function handleQueryClick(formData: any) {
@@ -30,12 +29,11 @@ function handleResetClick() {
 
 // 对modal组件的操作
 const modalRef = ref<InstanceType<typeof UserModal>>()
-function handleNewClick() {
+function handleNewBtnClick() {
   modalRef.value?.setModalVisible()
 }
-function handleEditClick(itemData: any) {
-  console.log(itemData)
-  modalRef.value?.setModalVisible(false, itemData)
+function handleEditBtnClick(itemdata: any) {
+  modalRef.value?.setModalVisible(false, itemdata)
 }
 </script>
 

@@ -8,7 +8,7 @@ class Cache {
 
   constructor(type: CacheType) {
     this.storage = type === CacheType.Local ? localStorage : sessionStorage
-  }
+  }a
 
   setCache(key: string, value: any) {
     if (value) {

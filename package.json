@@ -21,6 +21,7 @@
     "@element-plus/icons-vue": "^2.3.2",
     "@jridgewell/sourcemap-codec": "^1.5.5",
     "axios": "^1.13.2",
+    "dayjs": "^1.11.19",
     "element-plus": "^2.11.7",
     "normalize.css": "^8.0.1",
     "pinia": "^3.0.4",

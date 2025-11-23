@@ -10,6 +10,7 @@ import router from '@/router'
 import { LOGIN_TOKEN } from '@/global/constants'
 import type { RouteRecord, RouteRecordRaw } from 'vue-router'
 import { mapMenusToRoutes } from '@/utils/map-manus'
+import useMainStore from '../main/main'
 
 interface ILoginState {
   token: string
@@ -61,6 +62,9 @@ const useLoginStore = defineStore('login', {
         this.userInfo = userInfo
         this.userMenus = userMenus
         const routes = mapMenusToRoutes(userMenus)
+        // 5请求roles和departments数据
+        const mainStore = useMainStore()
+        mainStore.fetchEntireDataAction()
         routes.forEach((route) => router.addRoute('main', route))
       }
     }

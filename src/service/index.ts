@@ -2,6 +2,7 @@ import { LOGIN_TOKEN } from '@/global/constants'
 import { localCache } from '@/utils/cache'
 import { BASE_URL, TIME_OUT } from './config'
 import HYRequest from './request'
+import type { HYRequestConfig } from './request/type'
 
 const hyRequest = new HYRequest({
   baseURL: BASE_URL,
@@ -17,6 +18,6 @@ const hyRequest = new HYRequest({
       return config
     }
   }
-})
+} as HYRequestConfig)
 
 export default hyRequest
