@@ -1,7 +1,6 @@
 <template>
   <div class="user">
     <page-search
-      :search-congig="serachconfig"
       @query-click="handleQueryClick"
       @reset-click="handleResetClick"
     />
@@ -17,9 +16,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import pageContent from './c-cpns/page-content.vue'
-import pageSearch from '@/components/page-search/page-search.vue'
+import pageSearch from './c-cpns/page-search.vue'
 import pageModal from './c-cpns/page-modal.vue'
-import serachconfig from './config/search-config'
 // 点击search,content操作
 const contentRef = ref<InstanceType<typeof pageContent>>()
 function handleQueryClick(queryInfo: any) {
