@@ -16,7 +16,7 @@
                 <el-input
                   v-model="formData[item.prop]"
                   :placeholder="item.placeholder"
-                ></el-input>
+                />
               </template>
               <template v-if="item.type === 'date-picker'">
                 <el-date-picker
@@ -25,20 +25,23 @@
                   range-separator="-"
                   start-placeholder="开始时间"
                   end-placeholder="结束时间"
-              /></template>
+                />
+              </template>
               <template v-if="item.type === 'select'">
                 <el-select
                   v-model="formData[item.prop]"
                   :placeholder="item.placeholder"
                   style="width: 100%"
                 >
-                  <el-option
-                    v-for="option in item.options"
-                    :label="option.label"
-                    :value="option.value"
-                    :key="option.value"
-                /></el-select> </template
-            ></el-form-item>
+                  <template v-for="option in item.options" :key="option.value">
+                    <el-option :label="option.label" :value="option.value" />
+                  </template>
+                </el-select>
+              </template>
+              <template v-if="item.type === 'custom'">
+                <slot :name="item.slotName"></slot>
+              </template>
+            </el-form-item>
           </template>
         </el-form>
       </div>
@@ -56,14 +59,26 @@
 
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import useMainStore from '@/store/main/main'
-import { storeToRefs } from 'pinia'
 import useSystemStore from '@/store/main/system/system'
-import modalConfig from '@/views/main/system/department/config/modal-config'
-import type { IModalProps } from '@/components/page-modal/type'
-// 定义prop
+// import type { IModalProps } from './type'
 
+// interface IModalConfig
+
+interface IModalProps {
+  modalConfig: {
+    pageName: string
+    header: {
+      newTitle: string
+      editTitle: string
+    }
+    formItems: any[]
+  }
+  otherInfo?: any
+}
+
+// 0.定义props
 const props = defineProps<IModalProps>()
+
 // 1.定义内部的属性
 const dialogVisible = ref(false)
 const initialData: any = {}
@@ -75,9 +90,7 @@ const isNewRef = ref(true)
 const editData = ref()
 
 // 2.获取roles/departments数据
-// const mainStore = useMainStore()
 const systemStore = useSystemStore()
-// const { entireDepartments } = storeToRefs(mainStore)
 
 // 2.定义设置dialogVisible方法
 function setModalVisible(isNew: boolean = true, itemData?: any) {
@@ -92,9 +105,7 @@ function setModalVisible(isNew: boolean = true, itemData?: any) {
   } else {
     // 新建数据
     for (const key in formData) {
-      const item = modalConfig.formItems.find(
-        (item) => item.prop === key
-      ) 
+      const item = props.modalConfig.formItems.find((item) => item.prop === key)
       formData[key] = item ? item.initialValue : ''
     }
     editData.value = null
@@ -104,12 +115,22 @@ function setModalVisible(isNew: boolean = true, itemData?: any) {
 // 3.点击了确定的逻辑
 function handleConfirmClick() {
   dialogVisible.value = false
+
+  let infoData = formData
+  if (props.otherInfo) {
+    infoData = { ...infoData, ...props.otherInfo }
+  }
+
   if (!isNewRef.value && editData.value) {
     // 编辑用户的数据
-    systemStore.editPageDataAction('department', editData.value.id, formData)
+    systemStore.editPageDataAction(
+      props.modalConfig.pageName,
+      editData.value.id,
+      infoData
+    )
   } else {
     // 创建新的部门
-    systemStore.newPageDataAction('department', formData)
+    systemStore.newPageDataAction(props.modalConfig.pageName, infoData)
   }
 }
 

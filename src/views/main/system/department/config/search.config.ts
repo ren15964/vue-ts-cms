@@ -1,10 +1,11 @@
-const serachconfig = {
+const searchConfig = {
   formItems: [
     {
       type: 'input',
       prop: 'name',
       label: '部门名称',
-      placeholder: '请输入查询的部门名称'
+      placeholder: '请输入查询的部门名称',
+      initialValue: 'aaaa'
     },
     {
       type: 'input',
@@ -14,9 +15,10 @@ const serachconfig = {
     },
     {
       type: 'date-picker',
-      prop: 'creatAt',
+      prop: 'createAt',
       label: '创建时间'
     }
   ]
 }
-export default serachconfig
+
+export default searchConfig

@@ -2,12 +2,17 @@
   <div class="content">
     <div class="header">
       <h3 class="title">{{ contentConfig?.header?.title ?? '数据列表' }}</h3>
-      <el-button type="primary" @click="handleNewUserClick">{{
-        contentConfig?.header?.btnTitle ?? '新建部门'
-      }}</el-button>
+      <el-button type="primary" @click="handleNewUserClick">
+        {{ contentConfig?.header?.btnTitle ?? '新建数据' }}
+      </el-button>
     </div>
     <div class="table">
-      <el-table :data="pageList" border>
+      <el-table
+        :data="pageList"
+        border
+        style="width: 100%"
+        v-bind="contentConfig.childrenTree"
+      >
         <template v-for="item in contentConfig.propsList" :key="item.prop">
           <template v-if="item.type === 'timer'">
             <el-table-column align="center" v-bind="item">
@@ -86,9 +91,12 @@ interface IProps {
       btnTitle?: string
     }
     propsList: any[]
+    childrenTree?: any
   }
 }
+
 const props = defineProps<IProps>()
+
 // 定义事件
 const emit = defineEmits(['newClick', 'editClick'])
 

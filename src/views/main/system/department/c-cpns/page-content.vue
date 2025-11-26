@@ -5,7 +5,7 @@
       <el-button type="primary" @click="handleNewUserClick">新建部门</el-button>
     </div>
     <div class="table">
-      <el-table :data="pageList" border>
+      <el-table :data="pageList" border style="width: 100%">
         <el-table-column align="center" type="selection" width="60px" />
         <el-table-column
           align="center"

@@ -1,5 +1,5 @@
 <template>
-  <div class="user">
+  <div class="department">
     <page-search
       @query-click="handleQueryClick"
       @reset-click="handleResetClick"
@@ -13,13 +13,14 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="department">
 import { ref } from 'vue'
-import pageContent from './c-cpns/page-content.vue'
-import pageSearch from './c-cpns/page-search.vue'
-import pageModal from './c-cpns/page-modal.vue'
-// 点击search,content操作
-const contentRef = ref<InstanceType<typeof pageContent>>()
+import PageSearch from './c-cpns/page-search.vue'
+import PageContent from './c-cpns/page-content.vue'
+import PageModal from './c-cpns/page-modal.vue'
+
+// 点击search, content的操作
+const contentRef = ref<InstanceType<typeof PageContent>>()
 function handleQueryClick(queryInfo: any) {
   contentRef.value?.fetchPageListData(queryInfo)
 }
@@ -27,8 +28,8 @@ function handleResetClick() {
   contentRef.value?.fetchPageListData()
 }
 
-// 点击content,modal操作
-const modalRef = ref<InstanceType<typeof pageModal>>()
+// 点击content, modal的操作
+const modalRef = ref<InstanceType<typeof PageModal>>()
 function handleNewClick() {
   modalRef.value?.setModalVisible()
 }
@@ -37,9 +38,4 @@ function handleEditClick(itemData: any) {
 }
 </script>
 
-<style lang="less" scoped>
-.user {
-  border-radius: 8px;
-  overflow: hidden;
-}
-</style>
+<style scoped></style>
