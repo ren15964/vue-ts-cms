@@ -1,69 +1,61 @@
 <template>
   <div class="content">
     <div class="header">
-      <h3 class="title">部门列表</h3>
-      <el-button type="primary" @click="handleNewUserClick">新建部门</el-button>
+      <h3 class="title">{{ contentConfig?.header?.title ?? '数据列表' }}</h3>
+      <el-button type="primary" @click="handleNewUserClick">{{
+        contentConfig?.header?.btnTitle ?? '新建部门'
+      }}</el-button>
     </div>
     <div class="table">
       <el-table :data="pageList" border>
-        <el-table-column align="center" type="selection" width="60px" />
-        <el-table-column
-          align="center"
-          type="index"
-          label="序号"
-          width="60px"
-        />
-
-        <el-table-column
-          align="center"
-          label="部门名称"
-          prop="name"
-          width="150px"
-        />
-        <el-table-column
-          align="center"
-          label="部门领导"
-          prop="leader"
-          width="150px"
-        />
-        <el-table-column
-          align="center"
-          label="上级部门"
-          prop="parentId"
-          width="150px"
-        />
-        <el-table-column align="center" label="创建时间" prop="createAt">
-          <template #default="scope">
-            {{ formatUTC(scope.row.createAt) }}
+        <template v-for="item in contentConfig.propsList" :key="item.prop">
+          <template v-if="item.type === 'timer'">
+            <el-table-column align="center" v-bind="item">
+              <template #default="scope">
+                {{ formatUTC(scope.row[item.prop]) }}
+              </template>
+            </el-table-column>
           </template>
-        </el-table-column>
-        <el-table-column align="center" label="更新时间" prop="updateAt">
-          <template #default="scope">
-            {{ formatUTC(scope.row.updateAt) }}
+          <template v-else-if="item.type === 'handler'">
+            <el-table-column align="center" v-bind="item">
+              <template #default="scope">
+                <el-button
+                  size="small"
+                  icon="Edit"
+                  type="primary"
+                  text
+                  @click="handleEditBtnClick(scope.row)"
+                >
+                  编辑
+                </el-button>
+                <el-button
+                  size="small"
+                  icon="Delete"
+                  type="danger"
+                  text
+                  @click="handleDeleteBtnClick(scope.row.id)"
+                >
+                  删除
+                </el-button>
+              </template>
+            </el-table-column>
           </template>
-        </el-table-column>
-        <el-table-column align="center" label="操作" width="150px">
-          <template #default="scope">
-            <el-button
-              size="small"
-              icon="Edit"
-              type="primary"
-              text
-              @click="handleEditBtnClick(scope.row)"
-            >
-              编辑
-            </el-button>
-            <el-button
-              size="small"
-              icon="Delete"
-              type="danger"
-              text
-              @click="handleDeleteBtnClick(scope.row.id)"
-            >
-              删除
-            </el-button>
+          <template v-else-if="item.type === 'custom'">
+            <el-table-column align="center" v-bind="item">
+              <template #default="scope">
+                <slot
+                  :name="item.slotName"
+                  v-bind="scope"
+                  :prop="item.prop"
+                  hName="why"
+                ></slot>
+              </template>
+            </el-table-column>
           </template>
-        </el-table-column>
+          <template v-else>
+            <el-table-column align="center" v-bind="item" />
+          </template>
+        </template>
       </el-table>
     </div>
     <div class="pagination">
@@ -86,6 +78,17 @@ import useSystemStore from '@/store/main/system/system'
 import { formatUTC } from '@/utils/format'
 import { ref } from 'vue'
 
+interface IProps {
+  contentConfig: {
+    pageName: string
+    header?: {
+      title?: string
+      btnTitle?: string
+    }
+    propsList: any[]
+  }
+}
+const props = defineProps<IProps>()
 // 定义事件
 const emit = defineEmits(['newClick', 'editClick'])
 
@@ -115,12 +118,12 @@ function fetchPageListData(formData: any = {}) {
 
   // 2.发起网络请求
   const queryInfo = { ...pageInfo, ...formData }
-  systemStore.postPageListAction('department', queryInfo)
+  systemStore.postPageListAction(props.contentConfig.pageName, queryInfo)
 }
 
 // 5.删除/新建/编辑的操作
 function handleDeleteBtnClick(id: number) {
-  systemStore.deletePageByIdAction('department', id)
+  systemStore.deletePageByIdAction(props.contentConfig.pageName, id)
 }
 function handleNewUserClick() {
   emit('newClick')
